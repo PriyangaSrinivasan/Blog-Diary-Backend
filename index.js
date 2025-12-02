@@ -15,6 +15,13 @@ app.use(cors({
   credentials:true
 }));
 
+// FIX: Add COOP to allow Google popup to close
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  next();
+});
+
+// global error handler
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "internal server Error";
@@ -32,8 +39,8 @@ app.get('/',(req,res)=>{
 })
 
 app.use("/api/auth", authRoute);
-app.use("/api/user",userRoute);
-app.use("/api/post",postRoute)
+app.use("/api/user", userRoute);
+app.use("/api/post", postRoute);
 
 app.listen(process.env.PORT, () => {
   console.log("server is running on port");
